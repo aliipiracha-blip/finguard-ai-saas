@@ -79,6 +79,9 @@ export function TransactionsTable() {
               <DialogContent>
                 <DialogHeader>
                   <DialogTitle>Add New Transaction</DialogTitle>
+                  <DialogDescription>
+                    Fill in the details below to add a new transaction.
+                  </DialogDescription>
                 </DialogHeader>
                 <div className="space-y-4 pt-4">
                   <div className="space-y-2">
