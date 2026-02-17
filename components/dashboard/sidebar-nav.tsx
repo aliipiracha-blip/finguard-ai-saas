@@ -10,6 +10,7 @@ import {
   Calculator,
   ShieldAlert,
   FileBarChart,
+  Landmark,
   Settings,
   Shield,
   LogOut,
@@ -25,6 +26,7 @@ const navItems = [
   { label: "Cash Flow", href: "/dashboard/cash-flow", icon: TrendingUp },
   { label: "Tax Center", href: "/dashboard/tax-center", icon: Calculator },
   { label: "Fraud Monitor", href: "/dashboard/fraud-monitor", icon: ShieldAlert },
+  { label: "Reconciliation", href: "/dashboard/reconciliation", icon: Landmark },
   { label: "Reports", href: "/dashboard/reports", icon: FileBarChart },
   { label: "Settings", href: "/dashboard/settings", icon: Settings },
 ]

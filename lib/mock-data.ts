@@ -170,6 +170,41 @@ export const taxData = {
   ],
 }
 
+export const reconciliationData = {
+  bankStatementBalance: 284500,
+  bookBalance: 281340,
+  asOfDate: "2026-02-17",
+  bankName: "Mercury Business Checking",
+  accountNumber: "****4821",
+  lastReconciled: "2026-01-31",
+  outstandingChecks: [
+    { id: "oc1", date: "2026-02-14", payee: "Office Supplies - Staples", checkNo: "1042", amount: -456.89, daysOutstanding: 3 },
+    { id: "oc2", date: "2026-02-11", payee: "Freelancer Payment - J. Smith", checkNo: "1041", amount: -4500.00, daysOutstanding: 6 },
+    { id: "oc3", date: "2026-02-08", payee: "Insurance Premium - State Farm", checkNo: "1039", amount: -1850.00, daysOutstanding: 9 },
+  ],
+  depositsInTransit: [
+    { id: "dt1", date: "2026-02-16", source: "Client Payment - NovaTech", amount: 5200.00, expectedClear: "2026-02-19" },
+    { id: "dt2", date: "2026-02-17", source: "Stripe Payout - Pending", amount: 3450.00, expectedClear: "2026-02-20" },
+  ],
+  bankAdjustments: [
+    { id: "ba1", date: "2026-02-15", description: "Monthly Service Fee", amount: -35.00, type: "fee" as const },
+    { id: "ba2", date: "2026-02-14", description: "Interest Earned", amount: 48.22, type: "interest" as const },
+    { id: "ba3", date: "2026-02-10", description: "Wire Transfer Fee", amount: -25.00, type: "fee" as const },
+  ],
+  bookAdjustments: [
+    { id: "bk1", date: "2026-02-13", description: "NSF Check - RetailCo", amount: -1250.00, type: "nsf" as const },
+    { id: "bk2", date: "2026-02-12", description: "Bank Error Correction", amount: 186.33, type: "correction" as const },
+  ],
+  reconciledHistory: [
+    { month: "Jan 2026", bankBalance: 277430, bookBalance: 277430, difference: 0, status: "reconciled" as const },
+    { month: "Dec 2025", bankBalance: 265800, bookBalance: 265800, difference: 0, status: "reconciled" as const },
+    { month: "Nov 2025", bankBalance: 251200, bookBalance: 251200, difference: 0, status: "reconciled" as const },
+    { month: "Oct 2025", bankBalance: 238400, bookBalance: 238750, difference: -350, status: "adjusted" as const },
+    { month: "Sep 2025", bankBalance: 224600, bookBalance: 224600, difference: 0, status: "reconciled" as const },
+    { month: "Aug 2025", bankBalance: 210100, bookBalance: 210100, difference: 0, status: "reconciled" as const },
+  ],
+}
+
 export const alerts = [
   {
     id: "a1",
