@@ -31,7 +31,7 @@ import {
 import { Label } from "@/components/ui/label"
 import { Camera, Plus, Search, ArrowUpDown } from "lucide-react"
 import { cn } from "@/lib/utils"
-import { transactions } from "@/lib/mock-data"
+import { transactions as initialTransactions } from "@/lib/mock-data"
 
 const statusStyles = {
   completed: "bg-primary/10 text-primary",
@@ -40,11 +40,41 @@ const statusStyles = {
 }
 
 export function TransactionsTable() {
+  const [allTransactions, setAllTransactions] = useState(initialTransactions)
   const [search, setSearch] = useState("")
   const [category, setCategory] = useState("all")
   const [sortAsc, setSortAsc] = useState(false)
+  const [dialogOpen, setDialogOpen] = useState(false)
 
-  const filtered = transactions
+  // Form state
+  const [newDesc, setNewDesc] = useState("")
+  const [newAmount, setNewAmount] = useState("")
+  const [newCategory, setNewCategory] = useState("")
+  const [newDate, setNewDate] = useState("")
+
+  const handleAddTransaction = () => {
+    if (!newDesc || !newAmount || !newCategory || !newDate) return
+
+    const tx = {
+      id: `tx-${Date.now()}`,
+      date: newDate,
+      description: newDesc,
+      category: newCategory.charAt(0).toUpperCase() + newCategory.slice(1),
+      amount: parseFloat(newAmount),
+      status: "completed" as const,
+    }
+
+    setAllTransactions((prev) => [tx, ...prev])
+
+    // Reset form
+    setNewDesc("")
+    setNewAmount("")
+    setNewCategory("")
+    setNewDate("")
+    setDialogOpen(false)
+  }
+
+  const filtered = allTransactions
     .filter((t) => {
       const matchSearch = t.description
         .toLowerCase()
@@ -69,7 +99,7 @@ export function TransactionsTable() {
               <Camera className="h-3.5 w-3.5" />
               Scan Receipt
             </Button>
-            <Dialog>
+            <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
               <DialogTrigger asChild>
                 <Button size="sm" className="gap-2">
                   <Plus className="h-3.5 w-3.5" />
@@ -86,16 +116,27 @@ export function TransactionsTable() {
                 <div className="space-y-4 pt-4">
                   <div className="space-y-2">
                     <Label htmlFor="desc">Description</Label>
-                    <Input id="desc" placeholder="Enter description..." />
+                    <Input
+                      id="desc"
+                      placeholder="Enter description..."
+                      value={newDesc}
+                      onChange={(e) => setNewDesc(e.target.value)}
+                    />
                   </div>
                   <div className="grid grid-cols-2 gap-4">
                     <div className="space-y-2">
                       <Label htmlFor="amount">Amount</Label>
-                      <Input id="amount" type="number" placeholder="0.00" />
+                      <Input
+                        id="amount"
+                        type="number"
+                        placeholder="0.00"
+                        value={newAmount}
+                        onChange={(e) => setNewAmount(e.target.value)}
+                      />
                     </div>
                     <div className="space-y-2">
                       <Label htmlFor="cat">Category</Label>
-                      <Select>
+                      <Select value={newCategory} onValueChange={setNewCategory}>
                         <SelectTrigger id="cat">
                           <SelectValue placeholder="Select" />
                         </SelectTrigger>
@@ -112,9 +153,20 @@ export function TransactionsTable() {
                   </div>
                   <div className="space-y-2">
                     <Label htmlFor="date">Date</Label>
-                    <Input id="date" type="date" />
+                    <Input
+                      id="date"
+                      type="date"
+                      value={newDate}
+                      onChange={(e) => setNewDate(e.target.value)}
+                    />
                   </div>
-                  <Button className="w-full">Add Transaction</Button>
+                  <Button
+                    className="w-full"
+                    onClick={handleAddTransaction}
+                    disabled={!newDesc || !newAmount || !newCategory || !newDate}
+                  >
+                    Add Transaction
+                  </Button>
                 </div>
               </DialogContent>
             </Dialog>
