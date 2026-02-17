@@ -54,8 +54,8 @@ export const balanceSheetData = {
   ],
   equity: [
     { label: "Common Stock", amount: 100000 },
-    { label: "Retained Earnings", amount: 247200 },
-    { label: "Current Period Net Income", amount: 47160 },
+    { label: "Retained Earnings", amount: 218030 },
+    { label: "Current Period Net Income", amount: 46670 },
   ],
 }
 
@@ -63,7 +63,7 @@ export const balanceSheetData = {
 export const cashFlowStatementData = {
   period: "Jan 1, 2026 - Feb 17, 2026",
   operating: [
-    { label: "Net Income", amount: 47160 },
+    { label: "Net Income", amount: 46670 },
     { label: "Depreciation & Amortization", amount: 4200 },
     { label: "Increase in Accounts Receivable", amount: -12400 },
     { label: "Decrease in Inventory", amount: 3200 },
@@ -78,7 +78,7 @@ export const cashFlowStatementData = {
     { label: "Loan Repayment", amount: -6000 },
     { label: "Owner Distribution", amount: -10000 },
   ],
-  beginningCash: 276940,
+  beginningCash: 277430,
 }
 
 export function sumItems(items: { amount: number }[]) {
