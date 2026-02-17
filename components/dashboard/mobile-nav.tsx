@@ -3,7 +3,7 @@
 import Link from "next/link"
 import { usePathname } from "next/navigation"
 import { cn } from "@/lib/utils"
-import { Sheet, SheetContent, SheetTitle, SheetTrigger } from "@/components/ui/sheet"
+import { Sheet, SheetContent, SheetDescription, SheetTitle, SheetTrigger } from "@/components/ui/sheet"
 import { Button } from "@/components/ui/button"
 import {
   LayoutDashboard,
@@ -50,6 +50,7 @@ export function MobileNav() {
         </SheetTrigger>
         <SheetContent side="left" className="w-64 p-0">
           <SheetTitle className="sr-only">Navigation</SheetTitle>
+          <SheetDescription className="sr-only">Main navigation menu</SheetDescription>
           <div className="flex h-16 items-center border-b border-border px-4">
             <Link href="/" className="flex items-center gap-2" onClick={() => setOpen(false)}>
               <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-primary">
