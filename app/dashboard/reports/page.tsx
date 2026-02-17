@@ -178,6 +178,7 @@ function BalanceSheet() {
   const totalLiabilities = totalCurrentLiabilities + totalNonCurrentLiabilities
 
   const totalEquity = sumItems(balanceSheetData.equity)
+  const difference = totalAssets - (totalLiabilities + totalEquity)
 
   return (
     <div className="space-y-6">
@@ -190,6 +191,17 @@ function BalanceSheet() {
           <Download className="mr-2 h-4 w-4" />
           Export PDF
         </Button>
+      </div>
+
+      {/* Difference Indicator */}
+      <div className={`rounded-lg px-4 py-2.5 text-sm font-medium ${
+        difference === 0
+          ? "bg-primary/10 text-primary"
+          : "bg-destructive/10 text-destructive"
+      }`}>
+        {difference === 0
+          ? "Balanced -- Total Assets equals Total Liabilities & Equity (difference: $0)"
+          : `Out of balance -- Total Assets minus (Total Liabilities + Equity) = ${formatCurrency(difference)}`}
       </div>
 
       {/* Summary Cards */}
