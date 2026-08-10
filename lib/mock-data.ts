@@ -228,3 +228,148 @@ export const alerts = [
       "Estimated quarterly payment of $11,813 is due by April 15, 2026.",
   },
 ]
+
+export type BudgetCategory = {
+  name: string
+  budgeted: number
+  actual: number
+  variance: number
+  variancePercent: number
+  trend: "over" | "under" | "on-track"
+  alertThreshold: number
+}
+
+export type DepartmentBudget = {
+  name: string
+  categories: BudgetCategory[]
+  totalBudgeted: number
+  totalActual: number
+}
+
+export type MonthlyBudgetComparison = {
+  month: string
+  totalBudgeted: number
+  totalActual: number
+  variance: number
+  isForecast?: boolean
+}
+
+export const budgetData = {
+  fiscalYear: "2026",
+  period: "Q1 (Jan - Feb 2026)",
+  overallBudgeted: 425000,
+  overallActual: 412340,
+  overallVariance: 12660,
+  variancePercent: 3.0,
+  alertThreshold: 5,
+
+  byDepartment: [
+    {
+      name: "Operations",
+      categories: [
+        { name: "Salaries & Wages", budgeted: 85500, actual: 89200, variance: -3700, variancePercent: -4.3, trend: "over", alertThreshold: 5 },
+        { name: "Rent & Utilities", budgeted: 12400, actual: 12400, variance: 0, variancePercent: 0, trend: "on-track", alertThreshold: 5 },
+        { name: "Office Supplies", budgeted: 2000, actual: 1890, variance: 110, variancePercent: 5.5, trend: "under", alertThreshold: 5 },
+        { name: "Insurance", budgeted: 4000, actual: 3700, variance: 300, variancePercent: 7.5, trend: "under", alertThreshold: 5 },
+      ],
+      totalBudgeted: 103900,
+      totalActual: 107190,
+    },
+    {
+      name: "Technology",
+      categories: [
+        { name: "Software & Tools", budgeted: 8400, actual: 7840, variance: 560, variancePercent: 6.7, trend: "under", alertThreshold: 5 },
+        { name: "Cloud Services", budgeted: 5000, actual: 5200, variance: -200, variancePercent: -4.0, trend: "over", alertThreshold: 5 },
+        { name: "Equipment", budgeted: 15000, actual: 18500, variance: -3500, variancePercent: -23.3, trend: "over", alertThreshold: 5 },
+        { name: "Depreciation", budgeted: 4200, actual: 4200, variance: 0, variancePercent: 0, trend: "on-track", alertThreshold: 5 },
+      ],
+      totalBudgeted: 32600,
+      totalActual: 35740,
+    },
+    {
+      name: "Sales & Marketing",
+      categories: [
+        { name: "Marketing & Advertising", budgeted: 12000, actual: 14200, variance: -2200, variancePercent: -18.3, trend: "over", alertThreshold: 5 },
+        { name: "Sales Team", budgeted: 28000, actual: 28500, variance: -500, variancePercent: -1.8, trend: "over", alertThreshold: 5 },
+        { name: "Events & Conferences", budgeted: 5000, actual: 3200, variance: 1800, variancePercent: 36.0, trend: "under", alertThreshold: 5 },
+        { name: "Lead Generation", budgeted: 3000, actual: 2800, variance: 200, variancePercent: 6.7, trend: "under", alertThreshold: 5 },
+      ],
+      totalBudgeted: 48000,
+      totalActual: 48700,
+    },
+    {
+      name: "Professional Services",
+      categories: [
+        { name: "Legal Fees", budgeted: 3000, actual: 2100, variance: 900, variancePercent: 30.0, trend: "under", alertThreshold: 5 },
+        { name: "Accounting & Audit", budgeted: 5000, actual: 3500, variance: 1500, variancePercent: 30.0, trend: "under", alertThreshold: 5 },
+        { name: "Consulting", budgeted: 8000, actual: 5600, variance: 2400, variancePercent: 30.0, trend: "under", alertThreshold: 5 },
+        { name: "Contractors", budgeted: 18000, actual: 18500, variance: -500, variancePercent: -2.8, trend: "over", alertThreshold: 5 },
+      ],
+      totalBudgeted: 34000,
+      totalActual: 29700,
+    },
+    {
+      name: "Revenue",
+      categories: [
+        { name: "Product Sales", budgeted: 140000, actual: 145200, variance: 5200, variancePercent: 3.7, trend: "under", alertThreshold: 5 },
+        { name: "Service Revenue", budgeted: 80000, actual: 82500, variance: 2500, variancePercent: 3.1, trend: "under", alertThreshold: 5 },
+        { name: "Subscription Revenue", budgeted: 36000, actual: 38400, variance: 2400, variancePercent: 6.7, trend: "under", alertThreshold: 5 },
+        { name: "Other Income", budgeted: 5000, actual: 4800, variance: -200, variancePercent: -4.0, trend: "over", alertThreshold: 5 },
+      ],
+      totalBudgeted: 261000,
+      totalActual: 270900,
+    },
+  ] as DepartmentBudget[],
+
+  monthlyComparison: [
+    { month: "Jan", totalBudgeted: 68000, totalActual: 67200, variance: 800 },
+    { month: "Feb", totalBudgeted: 71000, totalActual: 73500, variance: -2500 },
+    { month: "Mar", totalBudgeted: 72000, totalActual: 71800, variance: 200 },
+    { month: "Apr", totalBudgeted: 73000, totalActual: 0, variance: 73000, isForecast: true },
+    { month: "May", totalBudgeted: 74000, totalActual: 0, variance: 74000, isForecast: true },
+    { month: "Jun", totalBudgeted: 75000, totalActual: 0, variance: 75000, isForecast: true },
+  ] as MonthlyBudgetComparison[],
+
+  variances: [
+    {
+      id: "v1",
+      category: "Equipment",
+      department: "Technology",
+      severity: "high" as const,
+      amount: -3500,
+      percent: -23.3,
+      reason: "Unplanned server upgrade to handle increased customer load",
+      recommendation: "Review equipment budget for Q2 and reallocate from contingency",
+    },
+    {
+      id: "v2",
+      category: "Marketing & Advertising",
+      department: "Sales & Marketing",
+      severity: "medium" as const,
+      amount: -2200,
+      percent: -18.3,
+      reason: "Accelerated Facebook ad spend to capture early-year demand",
+      recommendation: "Reduce spend by 10% in March to bring back on track",
+    },
+    {
+      id: "v3",
+      category: "Salaries & Wages",
+      department: "Operations",
+      severity: "medium" as const,
+      amount: -3700,
+      percent: -4.3,
+      reason: "New hire onboarding costs higher than planned",
+      recommendation: "Expect to recover within 2 months as productivity increases",
+    },
+    {
+      id: "v4",
+      category: "Events & Conferences",
+      department: "Sales & Marketing",
+      severity: "low" as const,
+      amount: 1800,
+      percent: 36.0,
+      reason: "Postponed trade show to Q2",
+      recommendation: "Funds available for reallocation to other categories",
+    },
+  ],
+}
