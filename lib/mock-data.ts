@@ -373,3 +373,220 @@ export const budgetData = {
     },
   ],
 }
+
+export const spendingInsights = [
+  {
+    id: "si1",
+    type: "increase" as const,
+    category: "Subscriptions",
+    insight: "You spent 40% more on subscriptions this month",
+    detail: "Main drivers: Netflix (+$15), Spotify (+$10), Adobe Creative Cloud (+$45)",
+    amount: 340,
+    trend: "up",
+    recommendation: "Review annual plans to potentially save $180/year",
+  },
+  {
+    id: "si2",
+    type: "decrease" as const,
+    category: "Marketing",
+    insight: "Marketing spend is 22% below average",
+    detail: "This is the lowest marketing spend in 6 months",
+    amount: 2100,
+    trend: "down",
+    recommendation: "Consider reallocating to high-performing Facebook campaigns",
+  },
+  {
+    id: "si3",
+    type: "anomaly" as const,
+    category: "Office Supplies",
+    insight: "Unusual office supply purchase detected",
+    detail: "$1,200 spent at Staples on Feb 14 - 3x your monthly average",
+    amount: 800,
+    trend: "alert",
+    recommendation: "Verify this was a planned bulk purchase",
+  },
+  {
+    id: "si4",
+    type: "increase" as const,
+    category: "Travel",
+    insight: "Travel expenses increased 65% this quarter",
+    detail: "Main driver: Client visits to NYC office (12 trips vs 4 last quarter)",
+    amount: 4500,
+    trend: "up",
+    recommendation: "Consider virtual meetings for nearby clients to reduce costs",
+  },
+  {
+    id: "si5",
+    type: "comparison" as const,
+    category: "Software",
+    insight: "Software costs increased but usage didn't scale",
+    detail: "8 new licenses purchased, but only 3 are actively used",
+    amount: 1200,
+    trend: "warning",
+    recommendation: "Audit licenses and cancel unused accounts to save $1,200/year",
+  },
+]
+
+export const anomalyAlerts = [
+  {
+    id: "aa1",
+    severity: "high" as const,
+    title: "Large wire transfer to new vendor",
+    description: "$25,000 wire transfer to 'Global Trade Partners LLC' - vendor not in your system",
+    timestamp: "2026-02-17T14:32:00Z",
+    category: "wire_transfer",
+    amount: 25000,
+    actionRequired: true,
+    dismissed: false,
+  },
+  {
+    id: "aa2",
+    severity: "medium" as const,
+    title: "Recurring charge increased",
+    description: "AWS monthly bill is 45% higher than your 3-month average ($2,340 vs $1,610)",
+    timestamp: "2026-02-16T09:15:00Z",
+    category: "recurring",
+    amount: 730,
+    actionRequired: false,
+    dismissed: false,
+  },
+  {
+    id: "aa3",
+    severity: "high" as const,
+    title: "Multiple payments to same vendor",
+    description: "3 payments to 'QuickBooks Payroll' in one week - totaling $1,125",
+    timestamp: "2026-02-15T16:48:00Z",
+    category: "duplicate",
+    amount: 1125,
+    actionRequired: true,
+    dismissed: false,
+  },
+  {
+    id: "aa4",
+    severity: "low" as const,
+    title: "Unusual transaction time",
+    description: "Transaction of $890 processed at 3:42 AM - outside normal business hours",
+    timestamp: "2026-02-14T03:42:00Z",
+    category: "timing",
+    amount: 890,
+    actionRequired: false,
+    dismissed: false,
+  },
+  {
+    id: "aa5",
+    severity: "medium" as const,
+    title: "Location anomaly detected",
+    description: "Credit card used in San Francisco and Austin within 4 hours - potential fraud",
+    timestamp: "2026-02-13T18:22:00Z",
+    category: "location",
+    amount: 2340,
+    actionRequired: true,
+    dismissed: false,
+  },
+]
+
+export type Invoice = {
+  id: string
+  invoiceNumber: string
+  clientName: string
+  clientEmail: string
+  clientAddress: string
+  issueDate: string
+  dueDate: string
+  items: InvoiceItem[]
+  subtotal: number
+  tax: number
+  total: number
+  status: "draft" | "sent" | "paid" | "overdue" | "cancelled"
+  notes?: string
+}
+
+export type InvoiceItem = {
+  description: string
+  quantity: number
+  rate: number
+  amount: number
+}
+
+export const invoices: Invoice[] = [
+  {
+    id: "inv1",
+    invoiceNumber: "INV-2026-001",
+    clientName: "Acme Corporation",
+    clientEmail: "billing@acmecorp.com",
+    clientAddress: "123 Business Ave, Suite 100, San Francisco, CA 94102",
+    issueDate: "2026-02-01",
+    dueDate: "2026-03-03",
+    items: [
+      { description: "Financial Consulting Services - January", quantity: 40, rate: 150, amount: 6000 },
+      { description: "Monthly Retainer - February", quantity: 1, rate: 2500, amount: 2500 },
+    ],
+    subtotal: 8500,
+    tax: 680,
+    total: 9180,
+    status: "paid",
+    notes: "Thank you for your business!",
+  },
+  {
+    id: "inv2",
+    invoiceNumber: "INV-2026-002",
+    clientName: "TechStart Inc",
+    clientEmail: "accounts@techstart.io",
+    clientAddress: "456 Innovation Blvd, Austin, TX 78701",
+    issueDate: "2026-02-05",
+    dueDate: "2026-03-07",
+    items: [
+      { description: "App Development Services", quantity: 80, rate: 175, amount: 14000 },
+      { description: "UI/UX Design", quantity: 20, rate: 125, amount: 2500 },
+      { description: "Project Management", quantity: 10, rate: 100, amount: 1000 },
+    ],
+    subtotal: 17500,
+    tax: 1400,
+    total: 18900,
+    status: "sent",
+  },
+  {
+    id: "inv3",
+    invoiceNumber: "INV-2026-003",
+    clientName: "Global Solutions Ltd",
+    clientEmail: "finance@globalsolutions.com",
+    clientAddress: "789 Enterprise Way, New York, NY 10001",
+    issueDate: "2026-01-15",
+    dueDate: "2026-02-14",
+    items: [
+      { description: "Annual Subscription - Enterprise Plan", quantity: 1, rate: 24000, amount: 24000 },
+      { description: "Implementation Support", quantity: 16, rate: 200, amount: 3200 },
+    ],
+    subtotal: 27200,
+    tax: 2176,
+    total: 29376,
+    status: "overdue",
+    notes: "Payment overdue. Please remit immediately.",
+  },
+  {
+    id: "inv4",
+    invoiceNumber: "INV-2026-004",
+    clientName: "NovaTech Systems",
+    clientEmail: "ap@novatech.com",
+    clientAddress: "321 Silicon Valley Rd, Palo Alto, CA 94301",
+    issueDate: "2026-02-10",
+    dueDate: "2026-03-12",
+    items: [
+      { description: "Cloud Infrastructure Setup", quantity: 1, rate: 8500, amount: 8500 },
+      { description: "DevOps Consulting", quantity: 24, rate: 185, amount: 4440 },
+    ],
+    subtotal: 12940,
+    tax: 1035,
+    total: 13975,
+    status: "draft",
+  },
+]
+
+export const invoiceStats = {
+  totalOutstanding: 62351,
+  overdueAmount: 29376,
+  draftInvoices: 1,
+  sentInvoices: 2,
+  paidThisMonth: 9180,
+  averagePaymentTime: 14,
+}
