@@ -276,11 +276,73 @@ export function InvoiceGeneration() {
     })
   }
 
-  const handleSendInvoice = (invoice: Invoice) => {
-    setInvoicesList(invoicesList.map((i) =>
-      i.id === invoice.id ? { ...i, status: "sent" } : i
-    ))
-    alert(`Invoice ${invoice.invoiceNumber} sent to ${invoice.clientEmail}`)
+  const handleSendInvoice = async (invoice: Invoice) => {
+    try {
+      const invoiceHtml = `
+        <div style="font-family: Arial, sans-serif; padding: 20px; max-width: 600px; margin: 0 auto;">
+          <div style="text-align: center; border-bottom: 2px solid #2563eb; padding-bottom: 20px; margin-bottom: 20px;">
+            <h1 style="color: #2563eb; margin: 0;">INVOICE</h1>
+            <p style="margin: 5px 0 0 0; color: #666;">${invoice.invoiceNumber}</p>
+          </div>
+          <div style="margin-bottom: 20px;">
+            <p><strong>Issue Date:</strong> ${formatDate(invoice.issueDate)}</p>
+            <p><strong>Due Date:</strong> ${formatDate(invoice.dueDate)}</p>
+          </div>
+          <table style="width: 100%; border-collapse: collapse; margin-bottom: 20px;">
+            <thead>
+              <tr style="border-bottom: 2px solid #2563eb;">
+                <th style="text-align: left; padding: 10px 5px;">Description</th>
+                <th style="text-align: center; padding: 10px 5px;">Qty</th>
+                <th style="text-align: right; padding: 10px 5px;">Amount</th>
+              </tr>
+            </thead>
+            <tbody>
+              ${invoice.items.map(item => `
+                <tr style="border-bottom: 1px solid #e5e7eb;">
+                  <td style="padding: 10px 5px;">${item.description}</td>
+                  <td style="text-align: center; padding: 10px 5px;">${item.quantity}</td>
+                  <td style="text-align: right; padding: 10px 5px;">${formatCurrency(item.amount)}</td>
+                </tr>
+              `).join('')}
+            </tbody>
+          </table>
+          <div style="text-align: right; margin-bottom: 20px;">
+            <p><strong>Subtotal:</strong> ${formatCurrency(invoice.subtotal)}</p>
+            <p><strong>Tax:</strong> ${formatCurrency(invoice.tax)}</p>
+            <p style="font-size: 18px; color: #2563eb;"><strong>Total:</strong> ${formatCurrency(invoice.total)}</p>
+          </div>
+          ${invoice.notes ? `<div style="margin-bottom: 20px;"><strong>Notes:</strong><p>${invoice.notes}</p></div>` : ''}
+          <div style="text-align: center; color: #666; font-size: 12px; border-top: 1px solid #e5e7eb; padding-top: 20px;">
+            <p>Thank you for your business!</p>
+          </div>
+        </div>
+      `
+
+      const response = await fetch('/api/send-email', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          to: invoice.clientEmail,
+          subject: `Invoice ${invoice.invoiceNumber} from FinGuard AI`,
+          html: invoiceHtml,
+          type: 'invoice',
+        }),
+      })
+
+      const result = await response.json()
+
+      if (result.success) {
+        setInvoicesList(invoicesList.map((i) =>
+          i.id === invoice.id ? { ...i, status: "sent" } : i
+        ))
+        alert(`Invoice ${invoice.invoiceNumber} sent successfully to ${invoice.clientEmail}`)
+      } else {
+        alert(`Failed to send invoice: ${result.error}`)
+      }
+    } catch (error) {
+      console.error('Error sending invoice:', error)
+      alert('Failed to send invoice. Please try again.')
+    }
   }
 
   const handleDeleteInvoice = (invoiceId: string) => {
