@@ -16,9 +16,13 @@ import {
   LogOut,
   ChevronLeft,
   ChevronRight,
+  AlertTriangle,
+  PieChart,
+  Receipt,
 } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { useState } from "react"
+import { NewCompanyDialog } from "./new-company-dialog"
 
 const navItems = [
   { label: "Dashboard", href: "/dashboard", icon: LayoutDashboard },
@@ -26,6 +30,9 @@ const navItems = [
   { label: "Cash Flow", href: "/dashboard/cash-flow", icon: TrendingUp },
   { label: "Tax Center", href: "/dashboard/tax-center", icon: Calculator },
   { label: "Fraud Monitor", href: "/dashboard/fraud-monitor", icon: ShieldAlert },
+  { label: "Anomaly Detection", href: "/dashboard/anomaly-alerts", icon: AlertTriangle },
+  { label: "Spending Insights", href: "/dashboard/spending-insights", icon: PieChart },
+  { label: "Invoice Generation", href: "/dashboard/invoices", icon: Receipt },
   { label: "Reconciliation", href: "/dashboard/reconciliation", icon: Landmark },
   { label: "Reports", href: "/dashboard/reports", icon: FileBarChart },
   { label: "Settings", href: "/dashboard/settings", icon: Settings },
@@ -59,6 +66,20 @@ export function SidebarNav() {
       </div>
 
       <nav className="flex-1 space-y-1 overflow-y-auto px-3 py-4">
+        <NewCompanyDialog
+          trigger={
+            <Button
+              variant="ghost"
+              size="sm"
+              className="w-full justify-start gap-3 text-sidebar-foreground/70 hover:bg-sidebar-accent hover:text-sidebar-foreground"
+            >
+              <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-primary/10">
+                <span className="text-sm font-bold text-primary">+</span>
+              </div>
+              {!collapsed && <span>New Company</span>}
+            </Button>
+          }
+        />
         {navItems.map((item) => {
           const isActive =
             pathname === item.href ||
