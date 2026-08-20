@@ -115,89 +115,98 @@ interface PrintableInvoiceProps {
 
 function PrintableInvoice({ invoice, companyName = "Your Company", companyAddress = "123 Business St, City, State 12345" }: PrintableInvoiceProps) {
   return (
-    <div className="bg-white p-8 text-black" id="invoice-printable">
-      <div className="flex justify-between items-start mb-8">
+    <div style={{ backgroundColor: "#ffffff", padding: "40px", fontFamily: "Arial, sans-serif", color: "#333333" }} id="invoice-printable">
+      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", marginBottom: "40px" }}>
         <div>
-          <h1 className="text-2xl font-bold text-primary">{companyName}</h1>
-          <p className="text-sm text-muted-foreground mt-1">{companyAddress}</p>
+          <h1 style={{ fontSize: "28px", fontWeight: "bold", color: "#2563eb", marginBottom: "8px", margin: "0 0 8px 0" }}>{companyName}</h1>
+          <p style={{ fontSize: "14px", color: "#666666", margin: 0 }}>{companyAddress}</p>
         </div>
-        <div className="text-right">
-          <h2 className="text-3xl font-bold text-primary">INVOICE</h2>
-          <p className="text-sm mt-1">{invoice.invoiceNumber}</p>
+        <div style={{ textAlign: "right" }}>
+          <h2 style={{ fontSize: "36px", fontWeight: "bold", color: "#2563eb", margin: 0 }}>INVOICE</h2>
+          <p style={{ fontSize: "14px", marginTop: "8px", marginBottom: 0 }}>{invoice.invoiceNumber}</p>
         </div>
       </div>
 
-      <div className="flex justify-between mb-8">
+      <div style={{ display: "flex", justifyContent: "space-between", marginBottom: "40px", borderBottom: "2px solid #2563eb", paddingBottom: "20px" }}>
         <div>
-          <h3 className="text-sm font-semibold text-muted-foreground uppercase mb-1">Bill To</h3>
-          <p className="font-medium">{invoice.clientName}</p>
-          <p className="text-sm text-muted-foreground">{invoice.clientAddress || invoice.clientEmail}</p>
+          <h3 style={{ fontSize: "12px", fontWeight: "600", color: "#666666", textTransform: "uppercase", marginBottom: "8px", margin: 0 }}>Bill To</h3>
+          <p style={{ fontWeight: "600", fontSize: "16px", margin: "0 0 4px 0" }}>{invoice.clientName}</p>
+          <p style={{ fontSize: "14px", color: "#666666", margin: 0, lineHeight: "1.4" }}>{invoice.clientAddress || invoice.clientEmail}</p>
         </div>
-        <div className="text-right">
-          <div className="mb-1">
-            <span className="text-sm text-muted-foreground">Issue Date: </span>
-            <span className="text-sm">{formatDate(invoice.issueDate)}</span>
+        <div style={{ textAlign: "right" }}>
+          <div style={{ marginBottom: "8px" }}>
+            <span style={{ fontSize: "14px", color: "#666666" }}>Issue Date: </span>
+            <span style={{ fontSize: "14px" }}>{formatDate(invoice.issueDate)}</span>
           </div>
-          <div className="mb-1">
-            <span className="text-sm text-muted-foreground">Due Date: </span>
-            <span className="text-sm font-medium">{formatDate(invoice.dueDate)}</span>
+          <div style={{ marginBottom: "8px" }}>
+            <span style={{ fontSize: "14px", color: "#666666" }}>Due Date: </span>
+            <span style={{ fontSize: "14px", fontWeight: "600" }}>{formatDate(invoice.dueDate)}</span>
           </div>
           <div>
-            <span className="text-sm text-muted-foreground">Status: </span>
-            <Badge className={cn("ml-1 capitalize", statusStyles[invoice.status])} variant="secondary">
+            <span style={{ fontSize: "14px", color: "#666666" }}>Status: </span>
+            <span style={{ 
+              display: "inline-block",
+              padding: "4px 12px",
+              borderRadius: "4px",
+              fontSize: "12px",
+              fontWeight: "500",
+              textTransform: "capitalize",
+              backgroundColor: invoice.status === "paid" ? "#dcfce7" : invoice.status === "overdue" ? "#fee2e2" : "#dbeafe",
+              color: invoice.status === "paid" ? "#166534" : invoice.status === "overdue" ? "#dc2626" : "#2563eb"
+            }}>
               {invoice.status}
-            </Badge>
+            </span>
           </div>
         </div>
       </div>
 
-      <table className="w-full mb-8">
+      <table style={{ width: "100%", borderCollapse: "collapse", marginBottom: "40px" }}>
         <thead>
-          <tr className="border-b-2 border-primary">
-            <th className="text-left py-3 text-sm font-semibold">Description</th>
-            <th className="text-center py-3 text-sm font-semibold w-20">Qty</th>
-            <th className="text-right py-3 text-sm font-semibold w-28">Rate</th>
-            <th className="text-right py-3 text-sm font-semibold w-28">Amount</th>
+          <tr style={{ borderBottom: "2px solid #2563eb" }}>
+            <th style={{ textAlign: "left", padding: "16px 8px", fontSize: "14px", fontWeight: "600", color: "#333333" }}>Description</th>
+            <th style={{ textAlign: "center", padding: "16px 8px", fontSize: "14px", fontWeight: "600", color: "#333333", width: "80px" }}>Qty</th>
+            <th style={{ textAlign: "right", padding: "16px 8px", fontSize: "14px", fontWeight: "600", color: "#333333", width: "120px" }}>Rate</th>
+            <th style={{ textAlign: "right", padding: "16px 8px", fontSize: "14px", fontWeight: "600", color: "#333333", width: "120px" }}>Amount</th>
           </tr>
         </thead>
         <tbody>
           {invoice.items.map((item, index) => (
-            <tr key={index} className="border-b border-border">
-              <td className="py-3 text-sm">{item.description}</td>
-              <td className="py-3 text-sm text-center">{item.quantity}</td>
-              <td className="py-3 text-sm text-right">{formatCurrency(item.rate)}</td>
-              <td className="py-3 text-sm text-right font-medium">{formatCurrency(item.amount)}</td>
+            <tr key={index} style={{ borderBottom: "1px solid #e5e7eb" }}>
+              <td style={{ padding: "16px 8px", fontSize: "14px" }}>{item.description}</td>
+              <td style={{ padding: "16px 8px", fontSize: "14px", textAlign: "center" }}>{item.quantity}</td>
+              <td style={{ padding: "16px 8px", fontSize: "14px", textAlign: "right" }}>{formatCurrency(item.rate)}</td>
+              <td style={{ padding: "16px 8px", fontSize: "14px", textAlign: "right", fontWeight: "500" }}>{formatCurrency(item.amount)}</td>
             </tr>
           ))}
         </tbody>
       </table>
 
-      <div className="flex justify-end mb-8">
-        <div className="w-64">
-          <div className="flex justify-between py-2 border-b border-border">
-            <span className="text-sm text-muted-foreground">Subtotal</span>
-            <span className="text-sm font-medium">{formatCurrency(invoice.subtotal)}</span>
+      <div style={{ display: "flex", justifyContent: "flex-end", marginBottom: "40px" }}>
+        <div style={{ width: "280px" }}>
+          <div style={{ display: "flex", justifyContent: "space-between", padding: "12px 0", borderBottom: "1px solid #e5e7eb" }}>
+            <span style={{ fontSize: "14px", color: "#666666" }}>Subtotal</span>
+            <span style={{ fontSize: "14px", fontWeight: "500" }}>{formatCurrency(invoice.subtotal)}</span>
           </div>
-          <div className="flex justify-between py-2 border-b border-border">
-            <span className="text-sm text-muted-foreground">Tax</span>
-            <span className="text-sm font-medium">{formatCurrency(invoice.tax)}</span>
+          <div style={{ display: "flex", justifyContent: "space-between", padding: "12px 0", borderBottom: "1px solid #e5e7eb" }}>
+            <span style={{ fontSize: "14px", color: "#666666" }}>Tax (8%)</span>
+            <span style={{ fontSize: "14px", fontWeight: "500" }}>{formatCurrency(invoice.tax)}</span>
           </div>
-          <div className="flex justify-between py-3 bg-primary/5 rounded-lg px-3 mt-2">
-            <span className="font-semibold">Total</span>
-            <span className="font-bold text-lg">{formatCurrency(invoice.total)}</span>
+          <div style={{ display: "flex", justifyContent: "space-between", padding: "16px", backgroundColor: "#eff6ff", borderRadius: "8px", marginTop: "8px" }}>
+            <span style={{ fontWeight: "600", fontSize: "16px" }}>Total</span>
+            <span style={{ fontWeight: "700", fontSize: "20px", color: "#2563eb" }}>{formatCurrency(invoice.total)}</span>
           </div>
         </div>
       </div>
 
       {invoice.notes && (
-        <div className="border-t border-border pt-4">
-          <h4 className="text-sm font-semibold text-muted-foreground mb-1">Notes</h4>
-          <p className="text-sm text-muted-foreground">{invoice.notes}</p>
+        <div style={{ borderTop: "1px solid #e5e7eb", paddingTop: "20px" }}>
+          <h4 style={{ fontSize: "14px", fontWeight: "600", color: "#666666", marginBottom: "8px", margin: 0 }}>Notes</h4>
+          <p style={{ fontSize: "14px", color: "#666666", margin: 0 }}>{invoice.notes}</p>
         </div>
       )}
 
-      <div className="border-t border-border pt-4 mt-8 text-center">
-        <p className="text-xs text-muted-foreground">Thank you for your business!</p>
+      <div style={{ borderTop: "1px solid #e5e7eb", paddingTop: "20px", marginTop: "40px", textAlign: "center" }}>
+        <p style={{ fontSize: "12px", color: "#666666", margin: 0 }}>Thank you for your business!</p>
       </div>
     </div>
   )
@@ -312,19 +321,23 @@ export function InvoiceGeneration() {
       const printWindow = window.open("", "_blank")
       if (printWindow) {
         printWindow.document.write(`
+          <!DOCTYPE html>
           <html>
             <head>
               <title>Invoice ${selectedInvoice?.invoiceNumber}</title>
               <style>
-                body { font-family: Arial, sans-serif; margin: 0; padding: 20px; }
-                @media print { body { print: both; } }
+                @media print {
+                  @page { margin: 20mm; }
+                  body { print-color-adjust: exact; -webkit-print-color-adjust: exact; }
+                }
               </style>
             </head>
             <body>${printContent.innerHTML}</body>
           </html>
         `)
         printWindow.document.close()
-        printWindow.print()
+        printWindow.focus()
+        setTimeout(() => { printWindow.print() }, 250)
       }
     }
   }
@@ -340,47 +353,9 @@ export function InvoiceGeneration() {
             <head>
               <title>Invoice ${selectedInvoice?.invoiceNumber}</title>
               <style>
-                * { margin: 0; padding: 0; box-sizing: border-box; }
-                body { font-family: Arial, sans-serif; padding: 40px; color: #333; }
-                .text-primary { color: #2563eb !important; }
-                .text-muted-foreground { color: #666 !important; }
-                table { width: 100%; border-collapse: collapse; margin-bottom: 24px; }
-                th, td { padding: 12px; text-align: left; border-bottom: 1px solid #ddd; }
-                th { background-color: #f5f5f5; font-weight: 600; }
-                .border-b-2 { border-bottom: 2px solid #2563eb; }
-                .bg-primary\/5 { background-color: #eff6ff; }
-                .rounded-lg { border-radius: 8px; }
-                .font-bold { font-weight: 700; }
-                .text-lg { font-size: 18px; }
-                .flex { display: flex; }
-                .justify-between { justify-content: space-between; }
-                .items-start { align-items: flex-start; }
-                .mb-8 { margin-bottom: 32px; }
-                .mb-1 { margin-bottom: 4px; }
-                .mt-1 { margin-top: 4px; }
-                .text-2xl { font-size: 24px; }
-                .text-xl { font-size: 20px; }
-                .text-sm { font-size: 14px; }
-                .text-xs { font-size: 12px; }
-                .uppercase { text-transform: uppercase; }
-                .text-right { text-align: right; }
-                .text-center { text-align: center; }
-                .border-t { border-top: 1px solid #ddd; }
-                .border-border { border-color: #ddd; }
-                .pt-4 { padding-top: 16px; }
-                .mt-8 { margin-top: 32px; }
-                .py-3 { padding-top: 12px; padding-bottom: 12px; }
-                .py-2 { padding-top: 8px; padding-bottom: 8px; }
-                .px-3 { padding-left: 12px; padding-right: 12px; }
-                .w-64 { width: 256px; }
-                .text-center { text-align: center; }
-                h1 { font-size: 24px; margin-bottom: 4px; }
-                h2 { font-size: 20px; }
-                h3 { font-size: 14px; text-transform: uppercase; color: #666; margin-bottom: 4px; }
-                p { margin-bottom: 4px; }
                 @media print {
-                  body { padding: 20px; }
-                  .no-print { display: none; }
+                  @page { margin: 15mm; }
+                  body { print-color-adjust: exact; -webkit-print-color-adjust: exact; }
                 }
               </style>
             </head>
