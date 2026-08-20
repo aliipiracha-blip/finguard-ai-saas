@@ -115,98 +115,83 @@ interface PrintableInvoiceProps {
 
 function PrintableInvoice({ invoice, companyName = "Your Company", companyAddress = "123 Business St, City, State 12345" }: PrintableInvoiceProps) {
   return (
-    <div style={{ backgroundColor: "#ffffff", padding: "40px", fontFamily: "Arial, sans-serif", color: "#333333" }} id="invoice-printable">
-      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", marginBottom: "40px" }}>
+    <div style={{ backgroundColor: "#ffffff", padding: "24px", fontFamily: "Arial, sans-serif", color: "#333333" }} id="invoice-printable">
+      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", marginBottom: "20px" }}>
         <div>
-          <h1 style={{ fontSize: "28px", fontWeight: "bold", color: "#2563eb", marginBottom: "8px", margin: "0 0 8px 0" }}>{companyName}</h1>
-          <p style={{ fontSize: "14px", color: "#666666", margin: 0 }}>{companyAddress}</p>
+          <h1 style={{ fontSize: "20px", fontWeight: "bold", color: "#2563eb", margin: "0 0 4px 0" }}>{companyName}</h1>
+          <p style={{ fontSize: "11px", color: "#666666", margin: 0 }}>{companyAddress}</p>
         </div>
         <div style={{ textAlign: "right" }}>
-          <h2 style={{ fontSize: "36px", fontWeight: "bold", color: "#2563eb", margin: 0 }}>INVOICE</h2>
-          <p style={{ fontSize: "14px", marginTop: "8px", marginBottom: 0 }}>{invoice.invoiceNumber}</p>
+          <h2 style={{ fontSize: "24px", fontWeight: "bold", color: "#2563eb", margin: 0 }}>INVOICE</h2>
+          <p style={{ fontSize: "11px", marginTop: "4px", marginBottom: 0 }}>{invoice.invoiceNumber}</p>
         </div>
       </div>
 
-      <div style={{ display: "flex", justifyContent: "space-between", marginBottom: "40px", borderBottom: "2px solid #2563eb", paddingBottom: "20px" }}>
+      <div style={{ display: "flex", justifyContent: "space-between", marginBottom: "16px", borderBottom: "2px solid #2563eb", paddingBottom: "12px" }}>
         <div>
-          <h3 style={{ fontSize: "12px", fontWeight: "600", color: "#666666", textTransform: "uppercase", marginBottom: "8px", margin: 0 }}>Bill To</h3>
-          <p style={{ fontWeight: "600", fontSize: "16px", margin: "0 0 4px 0" }}>{invoice.clientName}</p>
-          <p style={{ fontSize: "14px", color: "#666666", margin: 0, lineHeight: "1.4" }}>{invoice.clientAddress || invoice.clientEmail}</p>
+          <h3 style={{ fontSize: "10px", fontWeight: "600", color: "#666666", textTransform: "uppercase", marginBottom: "4px", margin: 0 }}>Bill To</h3>
+          <p style={{ fontWeight: "600", fontSize: "12px", margin: "0 0 2px 0" }}>{invoice.clientName}</p>
+          <p style={{ fontSize: "11px", color: "#666666", margin: 0, lineHeight: "1.3" }}>{invoice.clientAddress || invoice.clientEmail}</p>
         </div>
         <div style={{ textAlign: "right" }}>
-          <div style={{ marginBottom: "8px" }}>
-            <span style={{ fontSize: "14px", color: "#666666" }}>Issue Date: </span>
-            <span style={{ fontSize: "14px" }}>{formatDate(invoice.issueDate)}</span>
+          <div style={{ marginBottom: "4px" }}>
+            <span style={{ fontSize: "11px", color: "#666666" }}>Issue: </span>
+            <span style={{ fontSize: "11px" }}>{formatDate(invoice.issueDate)}</span>
           </div>
-          <div style={{ marginBottom: "8px" }}>
-            <span style={{ fontSize: "14px", color: "#666666" }}>Due Date: </span>
-            <span style={{ fontSize: "14px", fontWeight: "600" }}>{formatDate(invoice.dueDate)}</span>
-          </div>
-          <div>
-            <span style={{ fontSize: "14px", color: "#666666" }}>Status: </span>
-            <span style={{ 
-              display: "inline-block",
-              padding: "4px 12px",
-              borderRadius: "4px",
-              fontSize: "12px",
-              fontWeight: "500",
-              textTransform: "capitalize",
-              backgroundColor: invoice.status === "paid" ? "#dcfce7" : invoice.status === "overdue" ? "#fee2e2" : "#dbeafe",
-              color: invoice.status === "paid" ? "#166534" : invoice.status === "overdue" ? "#dc2626" : "#2563eb"
-            }}>
-              {invoice.status}
-            </span>
+          <div style={{ marginBottom: "4px" }}>
+            <span style={{ fontSize: "11px", color: "#666666" }}>Due: </span>
+            <span style={{ fontSize: "11px", fontWeight: "600" }}>{formatDate(invoice.dueDate)}</span>
           </div>
         </div>
       </div>
 
-      <table style={{ width: "100%", borderCollapse: "collapse", marginBottom: "40px" }}>
+      <table style={{ width: "100%", borderCollapse: "collapse", marginBottom: "16px", fontSize: "11px" }}>
         <thead>
           <tr style={{ borderBottom: "2px solid #2563eb" }}>
-            <th style={{ textAlign: "left", padding: "16px 8px", fontSize: "14px", fontWeight: "600", color: "#333333" }}>Description</th>
-            <th style={{ textAlign: "center", padding: "16px 8px", fontSize: "14px", fontWeight: "600", color: "#333333", width: "80px" }}>Qty</th>
-            <th style={{ textAlign: "right", padding: "16px 8px", fontSize: "14px", fontWeight: "600", color: "#333333", width: "120px" }}>Rate</th>
-            <th style={{ textAlign: "right", padding: "16px 8px", fontSize: "14px", fontWeight: "600", color: "#333333", width: "120px" }}>Amount</th>
+            <th style={{ textAlign: "left", padding: "8px 4px", fontWeight: "600", color: "#333333" }}>Description</th>
+            <th style={{ textAlign: "center", padding: "8px 4px", fontWeight: "600", color: "#333333", width: "50px" }}>Qty</th>
+            <th style={{ textAlign: "right", padding: "8px 4px", fontWeight: "600", color: "#333333", width: "80px" }}>Rate</th>
+            <th style={{ textAlign: "right", padding: "8px 4px", fontWeight: "600", color: "#333333", width: "80px" }}>Amount</th>
           </tr>
         </thead>
         <tbody>
           {invoice.items.map((item, index) => (
             <tr key={index} style={{ borderBottom: "1px solid #e5e7eb" }}>
-              <td style={{ padding: "16px 8px", fontSize: "14px" }}>{item.description}</td>
-              <td style={{ padding: "16px 8px", fontSize: "14px", textAlign: "center" }}>{item.quantity}</td>
-              <td style={{ padding: "16px 8px", fontSize: "14px", textAlign: "right" }}>{formatCurrency(item.rate)}</td>
-              <td style={{ padding: "16px 8px", fontSize: "14px", textAlign: "right", fontWeight: "500" }}>{formatCurrency(item.amount)}</td>
+              <td style={{ padding: "8px 4px" }}>{item.description}</td>
+              <td style={{ padding: "8px 4px", textAlign: "center" }}>{item.quantity}</td>
+              <td style={{ padding: "8px 4px", textAlign: "right" }}>{formatCurrency(item.rate)}</td>
+              <td style={{ padding: "8px 4px", textAlign: "right", fontWeight: "500" }}>{formatCurrency(item.amount)}</td>
             </tr>
           ))}
         </tbody>
       </table>
 
-      <div style={{ display: "flex", justifyContent: "flex-end", marginBottom: "40px" }}>
-        <div style={{ width: "280px" }}>
-          <div style={{ display: "flex", justifyContent: "space-between", padding: "12px 0", borderBottom: "1px solid #e5e7eb" }}>
-            <span style={{ fontSize: "14px", color: "#666666" }}>Subtotal</span>
-            <span style={{ fontSize: "14px", fontWeight: "500" }}>{formatCurrency(invoice.subtotal)}</span>
+      <div style={{ display: "flex", justifyContent: "flex-end", marginBottom: "16px" }}>
+        <div style={{ width: "200px" }}>
+          <div style={{ display: "flex", justifyContent: "space-between", padding: "6px 0", borderBottom: "1px solid #e5e7eb" }}>
+            <span style={{ fontSize: "11px", color: "#666666" }}>Subtotal</span>
+            <span style={{ fontSize: "11px", fontWeight: "500" }}>{formatCurrency(invoice.subtotal)}</span>
           </div>
-          <div style={{ display: "flex", justifyContent: "space-between", padding: "12px 0", borderBottom: "1px solid #e5e7eb" }}>
-            <span style={{ fontSize: "14px", color: "#666666" }}>Tax (8%)</span>
-            <span style={{ fontSize: "14px", fontWeight: "500" }}>{formatCurrency(invoice.tax)}</span>
+          <div style={{ display: "flex", justifyContent: "space-between", padding: "6px 0", borderBottom: "1px solid #e5e7eb" }}>
+            <span style={{ fontSize: "11px", color: "#666666" }}>Tax (8%)</span>
+            <span style={{ fontSize: "11px", fontWeight: "500" }}>{formatCurrency(invoice.tax)}</span>
           </div>
-          <div style={{ display: "flex", justifyContent: "space-between", padding: "16px", backgroundColor: "#eff6ff", borderRadius: "8px", marginTop: "8px" }}>
-            <span style={{ fontWeight: "600", fontSize: "16px" }}>Total</span>
-            <span style={{ fontWeight: "700", fontSize: "20px", color: "#2563eb" }}>{formatCurrency(invoice.total)}</span>
+          <div style={{ display: "flex", justifyContent: "space-between", padding: "8px", backgroundColor: "#eff6ff", borderRadius: "4px", marginTop: "4px" }}>
+            <span style={{ fontWeight: "600", fontSize: "12px" }}>Total</span>
+            <span style={{ fontWeight: "700", fontSize: "14px", color: "#2563eb" }}>{formatCurrency(invoice.total)}</span>
           </div>
         </div>
       </div>
 
       {invoice.notes && (
-        <div style={{ borderTop: "1px solid #e5e7eb", paddingTop: "20px" }}>
-          <h4 style={{ fontSize: "14px", fontWeight: "600", color: "#666666", marginBottom: "8px", margin: 0 }}>Notes</h4>
-          <p style={{ fontSize: "14px", color: "#666666", margin: 0 }}>{invoice.notes}</p>
+        <div style={{ borderTop: "1px solid #e5e7eb", paddingTop: "12px" }}>
+          <h4 style={{ fontSize: "11px", fontWeight: "600", color: "#666666", marginBottom: "4px", margin: 0 }}>Notes</h4>
+          <p style={{ fontSize: "11px", color: "#666666", margin: 0 }}>{invoice.notes}</p>
         </div>
       )}
 
-      <div style={{ borderTop: "1px solid #e5e7eb", paddingTop: "20px", marginTop: "40px", textAlign: "center" }}>
-        <p style={{ fontSize: "12px", color: "#666666", margin: 0 }}>Thank you for your business!</p>
+      <div style={{ borderTop: "1px solid #e5e7eb", paddingTop: "12px", marginTop: "16px", textAlign: "center" }}>
+        <p style={{ fontSize: "10px", color: "#666666", margin: 0 }}>Thank you for your business!</p>
       </div>
     </div>
   )
@@ -776,16 +761,16 @@ export function InvoiceGeneration() {
       </div>
 
       <Dialog open={isViewDialogOpen} onOpenChange={setIsViewDialogOpen}>
-        <DialogContent className="sm:max-w-[700px]">
-          <DialogHeader>
+        <DialogContent className="sm:max-w-[700px] max-h-[90vh] flex flex-col">
+          <DialogHeader className="shrink-0">
             <DialogTitle>Invoice Details - {selectedInvoice?.invoiceNumber}</DialogTitle>
           </DialogHeader>
-          {selectedInvoice && (
-            <div className="py-4">
+          <div className="overflow-y-auto flex-1 py-2">
+            {selectedInvoice && (
               <PrintableInvoice invoice={selectedInvoice} />
-            </div>
-          )}
-          <DialogFooter>
+            )}
+          </div>
+          <DialogFooter className="shrink-0 mt-4">
             <Button variant="outline" onClick={() => setIsViewDialogOpen(false)}>Close</Button>
             <Button variant="outline" onClick={printInvoice}>
               <Printer className="h-4 w-4 mr-2" /> Print
@@ -798,15 +783,15 @@ export function InvoiceGeneration() {
       </Dialog>
 
       <Dialog open={isPrintDialogOpen} onOpenChange={setIsPrintDialogOpen}>
-        <DialogContent className="sm:max-w-[700px]">
-          <DialogHeader>
+        <DialogContent className="sm:max-w-[700px] max-h-[90vh] flex flex-col">
+          <DialogHeader className="shrink-0">
             <DialogTitle>Print Invoice - {selectedInvoice?.invoiceNumber}</DialogTitle>
             <DialogDescription>Click Print to save as PDF or print directly.</DialogDescription>
           </DialogHeader>
-          <div className="py-4" ref={printRef}>
+          <div className="overflow-y-auto flex-1 py-2" ref={printRef}>
             {selectedInvoice && <PrintableInvoice invoice={selectedInvoice} />}
           </div>
-          <DialogFooter>
+          <DialogFooter className="shrink-0 mt-4">
             <Button variant="outline" onClick={() => setIsPrintDialogOpen(false)}>Close</Button>
             <Button variant="outline" onClick={printInvoice}>
               <Printer className="h-4 w-4 mr-2" /> Print
