@@ -46,6 +46,7 @@ import {
   Edit,
   Printer,
   X,
+  FileDown,
 } from "lucide-react"
 import { cn } from "@/lib/utils"
 import { invoices as initialInvoices, invoiceStats, type Invoice, type InvoiceItem } from "@/lib/mock-data"
@@ -324,6 +325,73 @@ export function InvoiceGeneration() {
         `)
         printWindow.document.close()
         printWindow.print()
+      }
+    }
+  }
+
+  const downloadPDF = () => {
+    const printContent = document.getElementById("invoice-printable")
+    if (printContent) {
+      const printWindow = window.open("", "_blank")
+      if (printWindow) {
+        printWindow.document.write(`
+          <!DOCTYPE html>
+          <html>
+            <head>
+              <title>Invoice ${selectedInvoice?.invoiceNumber}</title>
+              <style>
+                * { margin: 0; padding: 0; box-sizing: border-box; }
+                body { font-family: Arial, sans-serif; padding: 40px; color: #333; }
+                .text-primary { color: #2563eb !important; }
+                .text-muted-foreground { color: #666 !important; }
+                table { width: 100%; border-collapse: collapse; margin-bottom: 24px; }
+                th, td { padding: 12px; text-align: left; border-bottom: 1px solid #ddd; }
+                th { background-color: #f5f5f5; font-weight: 600; }
+                .border-b-2 { border-bottom: 2px solid #2563eb; }
+                .bg-primary\/5 { background-color: #eff6ff; }
+                .rounded-lg { border-radius: 8px; }
+                .font-bold { font-weight: 700; }
+                .text-lg { font-size: 18px; }
+                .flex { display: flex; }
+                .justify-between { justify-content: space-between; }
+                .items-start { align-items: flex-start; }
+                .mb-8 { margin-bottom: 32px; }
+                .mb-1 { margin-bottom: 4px; }
+                .mt-1 { margin-top: 4px; }
+                .text-2xl { font-size: 24px; }
+                .text-xl { font-size: 20px; }
+                .text-sm { font-size: 14px; }
+                .text-xs { font-size: 12px; }
+                .uppercase { text-transform: uppercase; }
+                .text-right { text-align: right; }
+                .text-center { text-align: center; }
+                .border-t { border-top: 1px solid #ddd; }
+                .border-border { border-color: #ddd; }
+                .pt-4 { padding-top: 16px; }
+                .mt-8 { margin-top: 32px; }
+                .py-3 { padding-top: 12px; padding-bottom: 12px; }
+                .py-2 { padding-top: 8px; padding-bottom: 8px; }
+                .px-3 { padding-left: 12px; padding-right: 12px; }
+                .w-64 { width: 256px; }
+                .text-center { text-align: center; }
+                h1 { font-size: 24px; margin-bottom: 4px; }
+                h2 { font-size: 20px; }
+                h3 { font-size: 14px; text-transform: uppercase; color: #666; margin-bottom: 4px; }
+                p { margin-bottom: 4px; }
+                @media print {
+                  body { padding: 20px; }
+                  .no-print { display: none; }
+                }
+              </style>
+            </head>
+            <body>${printContent.innerHTML}</body>
+          </html>
+        `)
+        printWindow.document.close()
+        setTimeout(() => {
+          printWindow.focus()
+          printWindow.print()
+        }, 250)
       }
     }
   }
@@ -736,8 +804,11 @@ export function InvoiceGeneration() {
           )}
           <DialogFooter>
             <Button variant="outline" onClick={() => setIsViewDialogOpen(false)}>Close</Button>
-            <Button onClick={printInvoice}>
-              <Printer className="h-4 w-4 mr-2" /> Print / PDF
+            <Button variant="outline" onClick={printInvoice}>
+              <Printer className="h-4 w-4 mr-2" /> Print
+            </Button>
+            <Button onClick={downloadPDF}>
+              <FileDown className="h-4 w-4 mr-2" /> Download PDF
             </Button>
           </DialogFooter>
         </DialogContent>
@@ -754,8 +825,11 @@ export function InvoiceGeneration() {
           </div>
           <DialogFooter>
             <Button variant="outline" onClick={() => setIsPrintDialogOpen(false)}>Close</Button>
-            <Button onClick={printInvoice}>
-              <Printer className="h-4 w-4 mr-2" /> Print / PDF
+            <Button variant="outline" onClick={printInvoice}>
+              <Printer className="h-4 w-4 mr-2" /> Print
+            </Button>
+            <Button onClick={downloadPDF}>
+              <FileDown className="h-4 w-4 mr-2" /> Download PDF
             </Button>
           </DialogFooter>
         </DialogContent>
