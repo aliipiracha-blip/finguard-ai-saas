@@ -326,9 +326,13 @@ export function InvoiceGeneration() {
             <head>
               <title>Invoice ${selectedInvoice?.invoiceNumber}</title>
               <style>
-                @media print {
-                  @page { margin: 20mm; }
-                  body { print-color-adjust: exact; -webkit-print-color-adjust: exact; }
+                @page { margin: 10mm; size: A4; }
+                body { 
+                  print-color-adjust: exact; 
+                  -webkit-print-color-adjust: exact; 
+                  transform: scale(0.85);
+                  transform-origin: top left;
+                  width: 117%;
                 }
               </style>
             </head>
@@ -353,9 +357,13 @@ export function InvoiceGeneration() {
             <head>
               <title>Invoice ${selectedInvoice?.invoiceNumber}</title>
               <style>
-                @media print {
-                  @page { margin: 15mm; }
-                  body { print-color-adjust: exact; -webkit-print-color-adjust: exact; }
+                @page { margin: 10mm; size: A4; }
+                body { 
+                  print-color-adjust: exact; 
+                  -webkit-print-color-adjust: exact; 
+                  transform: scale(0.85);
+                  transform-origin: top left;
+                  width: 117%;
                 }
               </style>
             </head>
