@@ -5,13 +5,14 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
-import { Download, TrendingUp, TrendingDown, DollarSign, FileBarChart, BarChart3 } from "lucide-react"
+import { Download, TrendingUp, TrendingDown, DollarSign, FileBarChart, BarChart3, Scale, AlertTriangle, AlertCircle, CheckCircle } from "lucide-react"
 import {
   profitLossData,
   balanceSheetData,
   cashFlowStatementData,
   sumItems,
 } from "@/lib/financial-statements"
+import { trialBalanceData, findTrialBalanceDiscrepancies, formatTBCurrency } from "@/lib/trial-balance-data"
 
 function formatCurrency(amount: number) {
   const isNegative = amount < 0
@@ -425,6 +426,185 @@ function CashFlowStatement() {
   )
 }
 
+// ------ Trial Balance Tab ------
+function TrialBalanceReport() {
+  const totalDebits = trialBalanceData.accounts.reduce((sum, acc) => sum + acc.debit, 0)
+  const totalCredits = trialBalanceData.accounts.reduce((sum, acc) => sum + acc.credit, 0)
+  const discrepancies = findTrialBalanceDiscrepancies(trialBalanceData.accounts)
+  const isBalanced = totalDebits === totalCredits
+
+  const getSeverityColor = (severity: string) => {
+    switch (severity) {
+      case "high": return "bg-destructive/10 border-destructive/30 text-destructive"
+      case "medium": return "bg-yellow-500/10 border-yellow-500/30 text-yellow-600"
+      case "low": return "bg-orange-500/10 border-orange-500/30 text-orange-600"
+      default: return "bg-muted"
+    }
+  }
+
+  const getSeverityBadge = (severity: string) => {
+    switch (severity) {
+      case "high": return <Badge variant="destructive" className="text-xs">HIGH</Badge>
+      case "medium": return <Badge variant="secondary" className="text-xs bg-yellow-500/20 text-yellow-700">MEDIUM</Badge>
+      case "low": return <Badge variant="outline" className="text-xs">LOW</Badge>
+      default: return null
+    }
+  }
+
+  return (
+    <div className="space-y-6">
+      <div className="flex items-center justify-between">
+        <div>
+          <h3 className="text-lg font-semibold text-foreground">Trial Balance</h3>
+          <p className="text-sm text-muted-foreground">As of {trialBalanceData.asOf}</p>
+        </div>
+        <Button variant="outline" size="sm">
+          <Download className="mr-2 h-4 w-4" />
+          Export PDF
+        </Button>
+      </div>
+
+      {/* Balance Status Banner */}
+      <div className={`rounded-lg px-4 py-3 text-sm font-medium flex items-center gap-2 ${isBalanced ? "bg-primary/10 text-primary" : "bg-destructive/10 text-destructive"}`}>
+        {isBalanced ? (
+          <>
+            <CheckCircle className="h-4 w-4" />
+            <span>Balanced - Total Debits ({formatTBCurrency(totalDebits)}) equal Total Credits ({formatTBCurrency(totalCredits)})</span>
+          </>
+        ) : (
+          <>
+            <AlertCircle className="h-4 w-4" />
+            <span>Imbalanced - Difference: {formatTBCurrency(Math.abs(totalDebits - totalCredits))}</span>
+          </>
+        )}
+      </div>
+
+      {/* Discrepancies */}
+      {discrepancies.length > 0 && (
+        <Card className="border-destructive/50">
+          <CardHeader className="pb-3">
+            <CardTitle className="text-sm font-semibold uppercase tracking-wider flex items-center gap-2 text-destructive">
+              <AlertTriangle className="h-4 w-4" />
+              Discrepancies Found ({discrepancies.length})
+            </CardTitle>
+          </CardHeader>
+          <CardContent className="space-y-3">
+            {discrepancies.map(d => (
+              <div key={d.id} className={`rounded-lg p-3 border ${getSeverityColor(d.severity)}`}>
+                <div className="flex items-center justify-between mb-2">
+                  <div className="flex items-center gap-2">
+                    {getSeverityBadge(d.severity)}
+                    <span className="text-sm font-medium">{d.description}</span>
+                  </div>
+                  {d.amount !== undefined && (
+                    <span className="text-sm font-mono font-semibold">{formatTBCurrency(Math.abs(d.amount))}</span>
+                  )}
+                </div>
+                <p className="text-xs opacity-80 ml-10">{d.suggestion}</p>
+              </div>
+            ))}
+          </CardContent>
+        </Card>
+      )}
+
+      {/* Trial Balance Table */}
+      <Card className="border-border/50">
+        <CardContent className="p-0 overflow-hidden">
+          <table className="w-full text-sm">
+            <thead>
+              <tr className="border-b bg-muted/50">
+                <th className="text-left p-3 font-semibold">Account</th>
+                <th className="text-right p-3 font-semibold">Type</th>
+                <th className="text-right p-3 font-semibold">Debit</th>
+                <th className="text-right p-3 font-semibold">Credit</th>
+              </tr>
+            </thead>
+            <tbody>
+              {/* Assets */}
+              {trialBalanceData.accounts.filter(a => a.type === "asset").map((acc, i) => (
+                <tr key={i} className="border-b hover:bg-muted/30">
+                  <td className="p-3">{acc.label}{acc.isContra && " (Contra)"}</td>
+                  <td className="text-right p-3 text-xs text-muted-foreground">Asset</td>
+                  <td className="text-right p-3 font-mono">{acc.debit > 0 ? formatTBCurrency(acc.debit) : ""}</td>
+                  <td className="text-right p-3 font-mono">{acc.credit > 0 ? formatTBCurrency(acc.credit) : ""}</td>
+                </tr>
+              ))}
+              {/* Liabilities */}
+              {trialBalanceData.accounts.filter(a => a.type === "liability").map((acc, i) => (
+                <tr key={i} className="border-b hover:bg-muted/30">
+                  <td className="p-3">{acc.label}</td>
+                  <td className="text-right p-3 text-xs text-muted-foreground">Liability</td>
+                  <td className="text-right p-3 font-mono">{acc.debit > 0 ? formatTBCurrency(acc.debit) : ""}</td>
+                  <td className="text-right p-3 font-mono">{acc.credit > 0 ? formatTBCurrency(acc.credit) : ""}</td>
+                </tr>
+              ))}
+              {/* Equity */}
+              {trialBalanceData.accounts.filter(a => a.type === "equity").map((acc, i) => (
+                <tr key={i} className="border-b hover:bg-muted/30">
+                  <td className="p-3">{acc.label}</td>
+                  <td className="text-right p-3 text-xs text-muted-foreground">Equity</td>
+                  <td className="text-right p-3 font-mono">{acc.debit > 0 ? formatTBCurrency(acc.debit) : ""}</td>
+                  <td className="text-right p-3 font-mono">{acc.credit > 0 ? formatTBCurrency(acc.credit) : ""}</td>
+                </tr>
+              ))}
+              {/* Revenue */}
+              {trialBalanceData.accounts.filter(a => a.type === "revenue").map((acc, i) => (
+                <tr key={i} className="border-b hover:bg-muted/30">
+                  <td className="p-3">{acc.label}</td>
+                  <td className="text-right p-3 text-xs text-muted-foreground">Revenue</td>
+                  <td className="text-right p-3 font-mono">{acc.debit > 0 ? formatTBCurrency(acc.debit) : ""}</td>
+                  <td className="text-right p-3 font-mono">{acc.credit > 0 ? formatTBCurrency(acc.credit) : ""}</td>
+                </tr>
+              ))}
+              {/* Expenses */}
+              {trialBalanceData.accounts.filter(a => a.type === "expense").map((acc, i) => (
+                <tr key={i} className="border-b hover:bg-muted/30">
+                  <td className="p-3">{acc.label}</td>
+                  <td className="text-right p-3 text-xs text-muted-foreground">Expense</td>
+                  <td className="text-right p-3 font-mono">{acc.debit > 0 ? formatTBCurrency(acc.debit) : ""}</td>
+                  <td className="text-right p-3 font-mono">{acc.credit > 0 ? formatTBCurrency(acc.credit) : ""}</td>
+                </tr>
+              ))}
+              {/* Totals Row */}
+              <tr className="bg-muted font-bold">
+                <td className="p-3" colSpan={2}>Totals</td>
+                <td className="text-right p-3 font-mono">{formatTBCurrency(totalDebits)}</td>
+                <td className="text-right p-3 font-mono">{formatTBCurrency(totalCredits)}</td>
+              </tr>
+            </tbody>
+          </table>
+        </CardContent>
+      </Card>
+
+      {/* Accounting Equation Check */}
+      <Card className="border-primary/30 bg-primary/5">
+        <CardContent className="p-4">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-2">
+              <span className="text-sm font-medium">Accounting Equation Check:</span>
+              <span className="text-xs text-muted-foreground">Assets = Liabilities + Equity</span>
+            </div>
+            <div className="flex items-center gap-4 text-sm">
+              <div className="text-center">
+                <p className="text-xs text-muted-foreground">Assets</p>
+                <p className="font-mono font-semibold">{formatTBCurrency(trialBalanceData.accounts.filter(a => a.type === "asset").reduce((s, a) => s + a.debit - a.credit, 0))}</p>
+              </div>
+              <span className="font-bold">=</span>
+              <div className="text-center">
+                <p className="text-xs text-muted-foreground">Liabilities + Equity</p>
+                <p className="font-mono font-semibold">{formatTBCurrency(
+                  trialBalanceData.accounts.filter(a => a.type === "liability").reduce((s, a) => s + a.credit - a.debit, 0) +
+                  trialBalanceData.accounts.filter(a => a.type === "equity").reduce((s, a) => s + a.credit - a.debit, 0)
+                )}</p>
+              </div>
+            </div>
+          </div>
+        </CardContent>
+      </Card>
+    </div>
+  )
+}
+
 // ------ Main Page ------
 export default function ReportsPage() {
   return (
@@ -432,7 +612,7 @@ export default function ReportsPage() {
       <DashboardHeader title="Reports" />
       <div className="p-6">
         <Tabs defaultValue="pnl" className="space-y-6">
-          <TabsList className="grid w-full grid-cols-3 max-w-lg">
+          <TabsList className="grid w-full grid-cols-4 max-w-xl">
             <TabsTrigger value="pnl" className="gap-1.5">
               <TrendingUp className="h-4 w-4 hidden sm:block" />
               <span>P&L</span>
@@ -444,6 +624,10 @@ export default function ReportsPage() {
             <TabsTrigger value="cash-flow" className="gap-1.5">
               <FileBarChart className="h-4 w-4 hidden sm:block" />
               <span>Cash Flow</span>
+            </TabsTrigger>
+            <TabsTrigger value="trial-balance" className="gap-1.5">
+              <Scale className="h-4 w-4 hidden sm:block" />
+              <span>Trial Balance</span>
             </TabsTrigger>
           </TabsList>
 
@@ -457,6 +641,10 @@ export default function ReportsPage() {
 
           <TabsContent value="cash-flow">
             <CashFlowStatement />
+          </TabsContent>
+
+          <TabsContent value="trial-balance">
+            <TrialBalanceReport />
           </TabsContent>
         </Tabs>
       </div>
